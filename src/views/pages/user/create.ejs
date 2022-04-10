@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../../partials/head.ejs'); %>
+  </head>
+  <body>
+    <div class="container py-3">
+      <header>
+        <%- include('../../partials/header.ejs') %> 
+      </header>
+      <form method="post" action="newuser">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <%- include('../../partials/footer'); %>
+      </footer>
+    </div>
+  </body>
+</html>

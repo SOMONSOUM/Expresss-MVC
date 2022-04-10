@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../../partials/head.ejs'); %>
+  </head>
+  <body>
+    <div class="container py-3">
+      <header><%- include('../../partials/header.ejs') %></header>
+      <h1><%= user.username %> has <%= user.email %></h1>
+      <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <%- include('../../partials/footer'); %>
+      </footer>
+    </div>
+  </body>
+</html>
