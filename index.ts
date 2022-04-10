@@ -112,20 +112,21 @@ const startServer = async () => {
       const user = `SELECT*FROM user WHERE username = "${username}"`;
       connection.query(user, async (err, rows) => {
         if (err) throw err;
-        if (user) {
+        if (rows.length > 0) {
           const validPassword = await bcrypt.compare(password, rows[0].password)
           if (validPassword) {
             req.session.loggedin = true
             req.session.username = username
             res.redirect("/")
+            console.log(req.session)
+          } else {
+            res.json({ message: "Invalid Password"})
           }
         } else {
-          res.send("Invalid Username or Password")
+          res.json({ message: "User is not existed" });
         }
       })
-    } else {
-      res.send({ error: "Invalid Password" });
-    }
+    } 
   });
 
   app.route("/signup").get( (req, res) => {
@@ -137,12 +138,20 @@ const startServer = async () => {
     const email = req.body.email;
     const password = await bcrypt.hash(req.body.password,10)
     console.log(req.body);
-
-    let sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "${password}")`;
-    connection.query(sql, (err, rows) => {
+    connection.query(`SELECT username FROM user WHERE username = "${username}"`, (err, rows) => {
       if (err) throw err;
-      res.redirect("/users");
-    });
+      
+      if (rows.length > 0) {
+        res.render("auth/signup", { title: "Signup", message: 'That username is already taken' })
+        console.log('That username is already taken')
+      } else {
+        let sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "${password}")`;
+        connection.query(sql, (err, rows) => {
+          if (err) throw err;
+          res.redirect("login");
+        });
+      }
+    })
   })
 
   app.get("/", (req, res) => {
