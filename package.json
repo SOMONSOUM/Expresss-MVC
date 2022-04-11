@@ -8,12 +8,13 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "ts-node-dev index.ts"
+    "dev": "ts-node-dev server.ts"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
     "@types/sequelize": "^4.28.11",
     "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "ejs": "^3.1.6",

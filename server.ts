@@ -1,9 +1,11 @@
 import express from "express";
 import { config } from "dotenv";
 import path from "path";
-import mysql from "mysql";
+import connection from "./config/db";
 import bcrypt from "bcrypt";
 import session from 'express-session'
+import cookie from 'cookie-parser'
+import router from "./src/routes/index";
 
 config();
 
@@ -16,27 +18,25 @@ const startServer = async () => {
   app.set("view engine", "ejs");
 
   //Midlewares
+  app.use(cookie());
   app.use(session({
     secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false
   }))
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static(path.join(__dirname, "src/public")));
 
-  //Database Connection
-  const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "soksan",
-    database: "portfolio_db",
-  });
-
+  //Checking Database connetion
   connection.connect((err) => {
     if (err) throw err;
     console.log("Database is connected successfully !");
   });
+
+  //Routes
+  app.use(router)
+
 
   app.route("/users").get((req, res) => {
     connection.query("SELECT*FROM user", (err, users) => {
@@ -153,10 +153,6 @@ const startServer = async () => {
       }
     })
   })
-
-  app.get("/", (req, res) => {
-    res.render("main", { title: "Home" });
-  });
 
   app.listen({ port }, () => console.log(`Server starting at ${port}`));
 };
