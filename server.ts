@@ -26,7 +26,7 @@ const startServer = async () => {
   }))
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.static(path.join(__dirname, "src/public")));
+  app.use(express.static(path.join(__dirname, "/public")));
 
   //Checking Database connetion
   connection.connect((err) => {
@@ -36,31 +36,6 @@ const startServer = async () => {
 
   //Routes
   app.use(router)
-
-
-  app.route("/users").get((req, res) => {
-    connection.query("SELECT*FROM user", (err, users) => {
-      if (err) throw err;
-      res.render("user/index", { users, title: "All users" });
-    });
-  });
-
-  app.route("/newuser").get((req, res) => {
-    res.render("user/create", { title: "Create User" });
-  });
-
-  app.route("/newuser").post(async (req, res, next) => {
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = await bcrypt.hash(req.body.password,10)
-    console.log(req.body);
-
-    let sql = `INSERT INTO user (username, email, password) VALUES ("${username}", "${email}", "${password}")`;
-    connection.query(sql, (err, rows) => {
-      if (err) throw err;
-      res.redirect("/users");
-    });
-  });
 
   app.route("/user/:id").get((req, res) => {
     console.log(req.params.id);
